@@ -1,5 +1,10 @@
 {
   "rules": {
+    "ordered-imports": [true, {
+      "import-sources-order": "lowercase-last",
+      "named-imports-order": "lowercase-first"
+      }
+    ],
     "curly": true,
     "eofline": false,
     "align": [true, "parameters"],
@@ -19,10 +24,7 @@
       "check-else",
       "check-whitespace",
       "check-open-brace"],
-    "quotemark": [true,
-      "single",
-      "avoid-escape"],
-    "semicolon": [true, "always"],
+    "semicolon": [true, "never"],
     "typedef-whitespace": [true, {
       "call-signature": "nospace",
       "index-signature": "nospace",

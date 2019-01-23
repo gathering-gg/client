@@ -1,8 +1,8 @@
 import { app, BrowserWindow } from 'electron'
+import { enableLiveReload } from 'electron-compile'
 import installExtension, {
   REACT_DEVELOPER_TOOLS
 } from 'electron-devtools-installer'
-import { enableLiveReload } from 'electron-compile'
 
 // TODO: Remove
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true

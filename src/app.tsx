@@ -1,11 +1,14 @@
-import * as React from 'react';
+import * as React from 'react'
+import { Login } from './Login'
 
-export class App extends React.Component<undefined, undefined> {
+interface AppOptions {
+  timer?: number
+  file?: string
+  token?: string
+}
+
+export class App extends React.Component {
   render() {
-    return (
-      <div>
-        <h2>Welcome to React with Typescript!</h2>
-      </div>
-    );
+    return <Login />
   }
 }
