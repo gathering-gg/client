@@ -28,11 +28,13 @@ if (isDevMode) {
 const store = new Store<GatheringConfig>()
 
 const createWindow = async () => {
+  const icon = join(__dirname, 'images', 'icon', 'icon.icns')
   // Create the browser window.
   mainWindow = new BrowserWindow({
     title: 'Gathering.gg',
-    width: 800,
-    height: 600,
+    icon,
+    width: isDevMode ? 1000 : 400,
+    height: isDevMode ? 1000 : 700,
     webPreferences: {
       nodeIntegration: true
     }
@@ -72,7 +74,7 @@ const createTray = () => {
   tray.on('right-click', showHide)
   tray.on('double-click', showHide)
   if (process.platform === 'darwin') {
-    app.dock.hide()
+    //    app.dock.hide()
   }
 }
 

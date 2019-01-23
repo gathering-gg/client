@@ -40,6 +40,7 @@
         ]
       },
       "electronPackagerConfig": {
+        "icon": "src/images/icon/icon.png",
         "packageManager": "yarn"
       },
       "electronWinstallerConfig": {
