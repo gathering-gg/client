@@ -44,12 +44,12 @@ export class Config extends React.Component<ConfigProps> {
 
   public render() {
     return (
-      <div>
+      <div className="container-fluid">
         <Form onSubmit={this.update} className="row">
           <div className="col-2 offset-1">
             <img id="logo" className="py-2" src="./ody.png" />
           </div>
-          <div className="col-9 d-flex align-items-center">
+          <div className="col-8 d-flex align-items-center">
             <h4>{this.props.user.username}</h4>
           </div>
           <FormGroup className="col-10 offset-1">

@@ -1,10 +1,12 @@
-import { app, BrowserWindow } from 'electron'
+import * as AutoLaunch from 'auto-launch'
+import { app, BrowserWindow, Menu, Tray } from 'electron'
 import { enableLiveReload } from 'electron-compile'
 import installExtension, {
   REACT_DEVELOPER_TOOLS
 } from 'electron-devtools-installer'
-import { cli } from './cli'
 import * as Store from 'electron-store'
+import { join } from 'path'
+import { cli } from './cli'
 import { GatheringConfig } from './store'
 
 // TODO: Remove
@@ -14,6 +16,7 @@ process.env.ELECTRON_ENABLE_LOGGING = 1
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: Electron.BrowserWindow | null = null
+let tray: Electron.Tray | null = null
 
 const isDevMode = process.execPath.match(/[\\/]electron/)
 
@@ -27,6 +30,7 @@ const store = new Store<GatheringConfig>()
 const createWindow = async () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    title: 'Gathering.gg',
     width: 800,
     height: 600,
     webPreferences: {
@@ -52,10 +56,31 @@ const createWindow = async () => {
   })
 }
 
+// Setup the tray icon and show/hide of our app
+const createTray = () => {
+  console.log('create tray')
+  const icon = join(__dirname, 'images', 'tray', 'icon.png')
+  tray = new Tray(icon)
+  const showHide = () => {
+    if (!mainWindow) {
+      return createWindow()
+    }
+    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+  }
+
+  tray.on('click', showHide)
+  tray.on('right-click', showHide)
+  tray.on('double-click', showHide)
+  if (process.platform === 'darwin') {
+    app.dock.hide()
+  }
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
+app.on('ready', createTray)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -74,11 +99,27 @@ app.on('activate', () => {
   }
 })
 
+// Setup Autolaunch on Login if not dev
+if (!isDevMode) {
+  const gatheringLauncher = new AutoLaunch({
+    name: 'Gathering',
+    isHidden: true
+  })
+  gatheringLauncher.enable()
+}
+
 // Start Parsing the log file if the user has a token saved
 const startParsing = async () => {
   const token = store.get('token')
   if (token) {
     cli.start({ token })
+  } else {
+    store.onDidChange('token', (token: string) => {
+      console.log('New Token!', token)
+      if (token) {
+        cli.start({ token })
+      }
+    })
   }
 }
 

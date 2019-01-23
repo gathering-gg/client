@@ -46,37 +46,39 @@ export class Login extends React.Component<LoginProps, LoginState> {
       undefined
     )
     return (
-      <div className="row">
-        <div className="py-3 offset-1 col-10 text-center">
-          <img id="logo" src="./ody.png" />
-        </div>
-        <div className="col-10 offset-1 d-flex justify-content-center">
-          <h1>Gathering.gg</h1>
-        </div>
-        <div className="col-10 offset-1">
-          <Form onSubmit={this.login} className="row">
-            <Input
-              className="col-12"
-              type="text"
-              name="token"
-              id="token"
-              required
-              autoFocus={true}
-              tabIndex={1}
-              value={this.state.token}
-              onChange={this.tokenChange}
-              placeholder="Gathering.gg Token"
-            />
-            {error}
-            <Button
-              type="submit"
-              color="primary"
-              className="col-12 mt-3"
-              disabled={!this.state.token}
-            >
-              Login
-            </Button>
-          </Form>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="py-3 offset-1 col-10 text-center">
+            <img id="logo" src="./ody.png" />
+          </div>
+          <div className="col-10 offset-1 d-flex justify-content-center">
+            <h1>Gathering.gg</h1>
+          </div>
+          <div className="col-10 offset-1">
+            <Form onSubmit={this.login} className="row">
+              <Input
+                className="col-12"
+                type="text"
+                name="token"
+                id="token"
+                required
+                autoFocus={true}
+                tabIndex={1}
+                value={this.state.token}
+                onChange={this.tokenChange}
+                placeholder="Gathering.gg Token"
+              />
+              {error}
+              <Button
+                type="submit"
+                color="primary"
+                className="col-12 mt-3"
+                disabled={!this.state.token}
+              >
+                Login
+              </Button>
+            </Form>
+          </div>
         </div>
       </div>
     )
