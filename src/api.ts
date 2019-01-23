@@ -1,12 +1,9 @@
 import axios from 'axios'
+import { config } from './config/index'
 import { User } from './user'
 
-const API_URL = process.env.GATHERING_GG_ROOT
-  ? process.env.GATHERING_GG_ROOT
-  : 'https://api.gathering.gg'
-
 const Axios = axios.create({
-  baseURL: API_URL
+  baseURL: config.url
 })
 
 class Api {

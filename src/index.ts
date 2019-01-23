@@ -3,9 +3,13 @@ import { enableLiveReload } from 'electron-compile'
 import installExtension, {
   REACT_DEVELOPER_TOOLS
 } from 'electron-devtools-installer'
+import { cli } from './cli'
+import * as Store from 'electron-store'
+import { GatheringConfig } from './store'
 
 // TODO: Remove
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
+process.env.ELECTRON_ENABLE_LOGGING = 1
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -16,6 +20,9 @@ const isDevMode = process.execPath.match(/[\\/]electron/)
 if (isDevMode) {
   enableLiveReload({ strategy: 'react-hmr' })
 }
+
+// Gathering.gg Configuration file
+const store = new Store<GatheringConfig>()
 
 const createWindow = async () => {
   // Create the browser window.
@@ -67,5 +74,12 @@ app.on('activate', () => {
   }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+// Start Parsing the log file if the user has a token saved
+const startParsing = async () => {
+  const token = store.get('token')
+  if (token) {
+    cli.start({ token })
+  }
+}
+
+startParsing()

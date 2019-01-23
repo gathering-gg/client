@@ -4,12 +4,8 @@ import { Login } from './Login'
 import { User } from './user'
 import { api } from './api'
 import { Spinner } from 'reactstrap'
-
-interface AppOptions {
-  timer?: number
-  file?: string
-  token?: string
-}
+import * as Store from 'electron-store'
+import { GatheringConfig } from './store'
 
 interface AppState {
   loading: boolean
@@ -18,9 +14,11 @@ interface AppState {
 }
 
 export class App extends React.Component<any, AppState> {
+  private store = new Store<GatheringConfig>()
   constructor(props: any) {
     super(props)
-    this.state = { loading: false, token: 'token' }
+    console.log('store:', this.store.store)
+    this.state = { loading: false, token: this.store.get('token', '') }
     this.onLogin = this.onLogin.bind(this)
   }
 
@@ -41,6 +39,7 @@ export class App extends React.Component<any, AppState> {
 
   public onLogin(token: string, user: User) {
     this.setState({ token, user })
+    this.store.set('token', token)
   }
 
   public renderLoading = () => (
