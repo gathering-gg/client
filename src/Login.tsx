@@ -1,12 +1,15 @@
 import * as React from 'react'
-import { Button, Form, Input } from 'reactstrap'
+import { Alert, Button, Form, Input } from 'reactstrap'
+import { api } from './api'
+import { user } from './user'
 
 interface LoginProps {
-  onLogin: (token: string) => void
+  onLogin: (token: string, user: User) => void
 }
 
 interface LoginState {
   token: string
+  error?: string
 }
 
 export class Login extends React.Component<LoginProps, LoginState> {
@@ -24,10 +27,24 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
   public async login(event: React.FormEvent<EventTarget>) {
     event.preventDefault()
-    console.log('login', this.state.token)
+    this.setState({ error: undefined })
+    try {
+      const { token } = this.state
+      const user = await api.me(token)
+      this.props.onLogin(token, user)
+    } catch (err) {
+      this.setState({ error: err.message })
+    }
   }
 
   public render() {
+    const error = this.state.error ? (
+      <Alert color="danger" className="col-12 mb-0 mt-3">
+        {this.state.error}
+      </Alert>
+    ) : (
+      undefined
+    )
     return (
       <div className="row">
         <div className="py-3 offset-1 col-10 text-center">
@@ -50,7 +67,13 @@ export class Login extends React.Component<LoginProps, LoginState> {
               onChange={this.tokenChange}
               placeholder="Gathering.gg Token"
             />
-            <Button type="submit" color="primary" className="col-12 mt-3">
+            {error}
+            <Button
+              type="submit"
+              color="primary"
+              className="col-12 mt-3"
+              disabled={!this.state.token}
+            >
               Login
             </Button>
           </Form>

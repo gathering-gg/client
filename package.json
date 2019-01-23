@@ -50,6 +50,7 @@
     "@types/electron-devtools-installer": "2.2.0",
     "@types/react": "16.7.20",
     "@types/react-dom": "16.0.11",
+    "axios": "^0.18.0",
     "bootstrap": "4.2.1",
     "electron-compile": "6.4.4",
     "electron-devtools-installer": "2.2.4",
