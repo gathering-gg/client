@@ -27,12 +27,26 @@
   },
   "config": {
     "forge": {
+      "makers": [
+        {
+          "name": "@electron-forge/maker-dmg",
+          "config": {
+            "format": "UFLO",
+            "icon": "./src/images/icon/icon.icns"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+          }
+        }
+      ],
       "make_targets": {
         "win32": [
           "squirrel"
         ],
         "darwin": [
-          "zip"
+          "dmg"
         ],
         "linux": [
           "deb",
@@ -72,7 +86,7 @@
     "bootstrap": "4.2.1",
     "electron-compile": "6.4.4",
     "electron-devtools-installer": "2.2.4",
-    "electron-squirrel-startup": "1.0.0",
+    "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^2.0.0",
     "lodash": "^4.17.11",
     "react": "16.7.0",

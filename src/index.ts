@@ -9,6 +9,10 @@ import { join } from 'path'
 import { cli } from './cli'
 import { GatheringConfig } from './store'
 
+if (require('electron-squirrel-startup')) {
+  return app.quit()
+}
+
 // TODO: Remove
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
 process.env.ELECTRON_ENABLE_LOGGING = 1

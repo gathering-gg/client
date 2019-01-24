@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+- lts/*
+os:
+- osx
+- windows
+env:
+  matrix:
+  - ARCH=amd64
+install: yarn
+before_script:
+- if [ $TRAVIS_OS_NAME = windows ]; then choco install make; fi
+- npm install -g electron-forge
+script: make prod
+deploy:
+  provider: releases
+  api_key:
+    secure: EFks4wRpfoVvpFl2gh3itqb1TY2A0xSWete8ImnWERpsYDbl14mH4lDfKrkQadm3HySUx2y8vBhDbvYLUsxm/JThCuhKOxUTa7Aq3TpVVJ3rSv5c1QARS7VtIvm/QHieOJsJn9jwdj6CfYq/xSH0WZj6iB4Gj8sB9SIiQnUuD5KSB/3e9yA4w6vpRWpeSJ8TpYzcJGs9CKqWeHdACwCyvcdet07pY/5twMje3tCl9+3mAyJ6lKZzAThFupny+ifrn0tsnOfHrdiuPZrAWa6oPv6/FIfwTi7TT9MdkA0yd2FvNdLNpxPjWxjf4mK17RvU357usjFsMjtZ6DrFZ90K+xJQcJhV2jtk/wcU2OEdedq3EZjCdFAJvCxLDHALgZ1xhLtMyMiA63Si+srKq+jyR061iN5DwQQAGfIxe0hYGTxa+/CewtTVg4EoZdcyUGoGz+PzEowhhi07cvBhhi3TngJASmXZq3/EeAypK+8XTp/VYthPAiZl7TYGuJUdD1+rJFhQXT8IKSTD1j8jHNwDGDyNRZSJi6miCtReOzNI7aVAOkb3Mgo/SVJGL/9CsLZFfez2X2hkJAIE65+bYz5tEqs7SYrcisVrxaqprjqllrRHPrA1XlKzUQriM0HIyNAHm8lfsgaQZTlLx4eVhPnBUHB7oxEqU/p2mfsuDN6gj4o=
+  file_glob: true
+  file: out/make/*
+  skip_cleanup: true
+  on:
+    tags: true
