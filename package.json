@@ -38,6 +38,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
+            "setupIcon": "./src/images/icon/icon.ico"
           }
         }
       ],
@@ -54,7 +55,7 @@
         ]
       },
       "electronPackagerConfig": {
-        "icon": "src/images/icon/icon.png",
+        "icon": "./src/images/icon/icon.png",
         "packageManager": "yarn"
       },
       "electronWinstallerConfig": {

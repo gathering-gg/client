@@ -6,6 +6,10 @@ body {
   overflow: scroll;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 #logo {
   width: 50px;
 }
