@@ -1,14 +1,14 @@
-import * as React from 'react'
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap'
-import { GatheringConfig } from './store'
-import { User } from './user'
 import { ipcRenderer } from 'electron'
+import * as Store from 'electron-store'
+import * as React from 'react'
+import { Button, Form, FormGroup, FormText, Input, Label } from 'reactstrap'
 import {
   IPC_GATHERING_CLI_RESTART,
   IPC_GATHERING_CLI_UPLOAD,
   IPC_GATHERING_OPEN_LOG_DIR
 } from './constants'
-import * as Store from 'electron-store'
+import { GatheringConfig } from './store'
+import { User } from './user'
 
 export interface ConfigProps {
   timer?: number

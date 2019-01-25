@@ -1,11 +1,11 @@
+import * as Store from 'electron-store'
 import * as React from 'react'
+import { Spinner } from 'reactstrap'
 import { Config } from './Config'
 import { Login } from './Login'
-import { User } from './user'
 import { api } from './api'
-import { Spinner } from 'reactstrap'
-import * as Store from 'electron-store'
 import { GatheringConfig } from './store'
+import { User } from './user'
 
 interface AppState {
   loading: boolean

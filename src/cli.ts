@@ -1,9 +1,9 @@
 import * as AppRootDir from 'app-root-dir'
-import { ChildProcess, exec, spawn } from 'child_process'
+import { exec, spawn, ChildProcess } from 'child_process'
+import * as log from 'electron-log'
+import { compact, map, toString } from 'lodash'
 import { platform } from 'os'
 import { dirname, join } from 'path'
-import { compact, map, toString } from 'lodash'
-import * as log from 'electron-log'
 
 const BINARY_NAME = process.platform === 'win32' ? 'gathering.exe' : 'gathering'
 const RESOURCE_DIR = 'resources'

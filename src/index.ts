@@ -1,20 +1,22 @@
 import * as AutoLaunch from 'auto-launch'
-import { app, BrowserWindow, ipcMain, Menu, Tray } from 'electron'
+import { app, ipcMain, BrowserWindow, Menu, Tray } from 'electron'
 import { enableLiveReload } from 'electron-compile'
 import installExtension, {
   REACT_DEVELOPER_TOOLS
 } from 'electron-devtools-installer'
+import * as log from 'electron-log'
 import * as Store from 'electron-store'
+import * as open from 'opn'
 import { dirname, join } from 'path'
 import { cli } from './cli'
-import { GatheringConfig } from './store'
 import {
-  IPC_GATHERING_OPEN_LOG_DIR,
-  IPC_GATHERING_CLI_RESTART
+  IPC_GATHERING_CLI_RESTART,
+  IPC_GATHERING_CLI_UPLOAD,
+  IPC_GATHERING_OPEN_LOG_DIR
 } from './constants'
-import * as log from 'electron-log'
-import * as open from 'opn'
+import { GatheringConfig } from './store'
 
+// tslint:disable-next-line:no-require-imports no-var-requires
 if (require('electron-squirrel-startup')) {
   return app.quit()
 }
@@ -100,10 +102,6 @@ const createTray = () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
 app.on('ready', createTray)
-
-// We have a tray icon, so do nothing on all windows closed. User
-// can re-show window by clicking the tray icon.
-app.on('window-all-closed', () => {})
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
