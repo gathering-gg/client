@@ -1,4 +1,4 @@
 export const config = {
-  env: 'dev',
-  url: 'http://localhost:8600'
+  env: 'prod',
+  url: 'https://api.gathering.gg'
 }

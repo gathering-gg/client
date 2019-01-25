@@ -17,9 +17,9 @@ const getResourceDir = () => {
       return 'linux'
     case 'darwin':
     case 'sunos':
-      return 'mac'
+      return 'darwin'
     case 'win32':
-      return 'win'
+      return 'windows'
   }
 }
 
