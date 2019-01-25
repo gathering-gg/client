@@ -1,21 +1,35 @@
 import * as AutoLaunch from 'auto-launch'
-import { app, BrowserWindow, Menu, Tray } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, Tray } from 'electron'
 import { enableLiveReload } from 'electron-compile'
 import installExtension, {
   REACT_DEVELOPER_TOOLS
 } from 'electron-devtools-installer'
 import * as Store from 'electron-store'
-import { join } from 'path'
+import { dirname, join } from 'path'
 import { cli } from './cli'
 import { GatheringConfig } from './store'
+import {
+  IPC_GATHERING_OPEN_LOG_DIR,
+  IPC_GATHERING_CLI_RESTART
+} from './constants'
+import * as log from 'electron-log'
+import * as open from 'opn'
 
 if (require('electron-squirrel-startup')) {
   return app.quit()
 }
 
+// Log level is `warn` by default, we want more logs during the beta period
+// for easier debugging.
+log.transports.file.level = 'verbose'
+// TODO: This can probably be removed with logging above
+process.env.ELECTRON_ENABLE_LOGGING = 1
+
+log.warn('Gathering.gg Client startup: Version:', app.getVersion())
+log.warn('Gathering.gg Client startup: Platform:', process.platform)
+
 // TODO: Remove
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
-process.env.ELECTRON_ENABLE_LOGGING = 1
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -64,7 +78,6 @@ const createWindow = async () => {
 
 // Setup the tray icon and show/hide of our app
 const createTray = () => {
-  console.log('create tray')
   const icon = join(__dirname, 'images', 'tray', 'icon.png')
   tray = new Tray(icon)
   const showHide = () => {
@@ -78,7 +91,7 @@ const createTray = () => {
   tray.on('right-click', showHide)
   tray.on('double-click', showHide)
   if (process.platform === 'darwin') {
-    //    app.dock.hide()
+    app.dock.hide()
   }
 }
 
@@ -88,14 +101,9 @@ const createTray = () => {
 app.on('ready', createWindow)
 app.on('ready', createTray)
 
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+// We have a tray icon, so do nothing on all windows closed. User
+// can re-show window by clicking the tray icon.
+app.on('window-all-closed', () => {})
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
@@ -118,11 +126,14 @@ if (!isDevMode) {
 const startParsing = async () => {
   const token = store.get('token')
   if (token) {
+    log.info('Store had token on startup, start parsing.')
     cli.start({ token })
   } else {
+    log.info('Store did not have token on startup, awaiting token change')
     store.onDidChange('token', (token: string) => {
-      console.log('New Token!', token)
+      log.info('New Token:', token)
       if (token) {
+        cli.stop()
         cli.start({ token })
       }
     })
@@ -130,3 +141,23 @@ const startParsing = async () => {
 }
 
 startParsing()
+
+// Run Commands
+ipcMain.on(IPC_GATHERING_OPEN_LOG_DIR, (event, arg) => {
+  open(dirname(log.transports.file.file))
+})
+
+ipcMain.on(IPC_GATHERING_CLI_RESTART, () => {
+  const token = store.get('token')
+  if (token) {
+    cli.stop()
+    cli.start({ token })
+  }
+})
+
+ipcMain.on(IPC_GATHERING_CLI_UPLOAD, () => {
+  const token = store.get('token')
+  if (token) {
+    cli.upload(token)
+  }
+})

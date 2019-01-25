@@ -1,6 +1,14 @@
 import * as React from 'react'
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap'
+import { GatheringConfig } from './store'
 import { User } from './user'
+import { ipcRenderer } from 'electron'
+import {
+  IPC_GATHERING_CLI_RESTART,
+  IPC_GATHERING_CLI_UPLOAD,
+  IPC_GATHERING_OPEN_LOG_DIR
+} from './constants'
+import * as Store from 'electron-store'
 
 export interface ConfigProps {
   timer?: number
@@ -36,10 +44,24 @@ export class Config extends React.Component<ConfigProps> {
 
   public update(event: React.FormEvent<EventTarget>) {
     event.preventDefault()
+    const store = new Store<GatheringConfig>()
+    if (this.state.timer) {
+      const timer = parseInt(this.state.timer, 10)
+      store.set('timer', timer)
+    }
+    if (this.state.file) {
+      store.set('file', this.state.file)
+    }
+    ipcRenderer.send(IPC_GATHERING_CLI_RESTART)
   }
 
   public async onUpload(event: React.FormEvent<EventTarget>) {
-    console.log('upload')
+    event.preventDefault()
+    ipcRenderer.send(IPC_GATHERING_CLI_UPLOAD)
+  }
+
+  public async openLogDir(event) {
+    ipcRenderer.send(IPC_GATHERING_OPEN_LOG_DIR)
   }
 
   public render() {
@@ -100,6 +122,14 @@ export class Config extends React.Component<ConfigProps> {
             The developers may request the raw logs to help debug certain
             issues.
           </small>
+          <Button
+            type="button"
+            color="info"
+            className="col-10 offset-1 mt-3"
+            onClick={this.openLogDir}
+          >
+            Show Gathering Client Log
+          </Button>
         </Form>
       </div>
     )

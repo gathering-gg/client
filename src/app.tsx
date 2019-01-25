@@ -10,6 +10,8 @@ import { GatheringConfig } from './store'
 interface AppState {
   loading: boolean
   token: string
+  timer?: number
+  file?: string
   user?: User
 }
 
@@ -17,8 +19,12 @@ export class App extends React.Component<any, AppState> {
   private store = new Store<GatheringConfig>()
   constructor(props: any) {
     super(props)
-    console.log('store:', this.store.store)
-    this.state = { loading: false, token: this.store.get('token', '') }
+    this.state = {
+      loading: false,
+      token: this.store.get('token', ''),
+      file: this.store.get('file', ''),
+      timer: this.store.get('timer', 30)
+    }
     this.onLogin = this.onLogin.bind(this)
   }
 

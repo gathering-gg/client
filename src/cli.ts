@@ -3,6 +3,7 @@ import { ChildProcess, exec, spawn } from 'child_process'
 import { platform } from 'os'
 import { dirname, join } from 'path'
 import { compact, map, toString } from 'lodash'
+import * as log from 'electron-log'
 
 const BINARY_NAME = process.platform === 'win32' ? 'gathering.exe' : 'gathering'
 const RESOURCE_DIR = 'resources'
@@ -46,6 +47,7 @@ class CLI {
   }
 
   public start(options: CLIOptions) {
+    log.info('Startng cli with binary at:', this.binary)
     const opts = compact(
       map(options, (v: string | boolean | undefined, k: string) => {
         if (v) {
@@ -54,25 +56,23 @@ class CLI {
         return undefined
       })
     )
-    console.log(opts)
     const gathering = spawn(this.binary, opts)
 
     gathering.stdout.on('data', data => {
-      console.log(`stdout: ${data}`)
+      log.verbose(`stdout: ${data}`)
     })
 
     gathering.stderr.on('data', data => {
-      console.log(`stderr: ${data}`)
+      log.verbose(`stderr: ${data}`)
     })
 
     gathering.on('close', code => {
-      console.log(`child process exited with code ${code}`)
+      log.warn('child process exited with code:', code)
       this.running = false
     })
 
     gathering.on('error', err => {
-      console.log('error in subprocess', err)
-      // Probably?
+      log.error('error in cli', err)
       this.running = false
     })
 
@@ -89,6 +89,17 @@ class CLI {
 
   public isRunning(): boolean {
     return this.running
+  }
+
+  public async upload(token: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      exec(`${this.binary} -token=${token} -upload`, (err, stdout, stderr) => {
+        if (err) {
+          return reject(err)
+        }
+        return resolve(stdout)
+      })
+    })
   }
 
   public async version(): Promise<string> {
