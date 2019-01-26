@@ -46,3 +46,5 @@ yarn lint
 
 ## Contributing ##
 Please feel free to submit issues and pull requests!
+
+Look! I'm helping! 
