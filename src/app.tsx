@@ -1,9 +1,11 @@
+import { ipcRenderer } from 'electron'
 import * as Store from 'electron-store'
 import * as React from 'react'
 import { Spinner } from 'reactstrap'
 import { Config } from './Config'
 import { Login } from './Login'
 import { api } from './api'
+import { IPC_GATHERING_CLI_RESTART } from './constants'
 import { GatheringConfig } from './store'
 import { User } from './user'
 
@@ -49,6 +51,7 @@ export class App extends React.Component<any, AppState> {
     this.setState({ token, user })
     this.store.set('token', token)
     this.store.set('user', user)
+    ipcRenderer.send(IPC_GATHERING_CLI_RESTART)
   }
 
   public renderLoading = () => (

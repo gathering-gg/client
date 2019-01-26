@@ -194,20 +194,14 @@ if (!isDevMode) {
 }
 
 // Start Parsing the log file if the user has a token saved
+// The store only broadcasts changes on the same thread, so this
+// will not be able to listen to the login events and start parsing.
+// Instead it's called from the IPC when the login happens.
 const startParsing = async () => {
   const token = store.get('token')
   if (token) {
     log.info('Store had token on startup, start parsing.')
     cli.start({ token })
-  } else {
-    log.info('Store did not have token on startup, awaiting token change')
-    store.onDidChange('token', (token: string) => {
-      log.info('New Token:', token)
-      if (token) {
-        cli.stop()
-        cli.start({ token })
-      }
-    })
   }
 }
 
