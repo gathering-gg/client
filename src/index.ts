@@ -16,6 +16,8 @@ import {
 } from './constants'
 import { GatheringConfig } from './store'
 
+// Squirrel installer launches the app during installation, but we
+// don't need that, or want the app to show, so stop.
 // tslint:disable-next-line:no-require-imports no-var-requires
 if (require('electron-squirrel-startup')) {
   return app.quit()
@@ -37,6 +39,12 @@ process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: Electron.BrowserWindow | null = null
 let tray: Electron.Tray | null = null
+
+// If another instance of the app is running, stop.
+const gotLock = app.requestSingleInstanceLock()
+if (!gotLock) {
+  return app.quit()
+}
 
 const isDevMode = process.execPath.match(/[\\/]electron/)
 
