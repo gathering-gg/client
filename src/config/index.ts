@@ -1,4 +1,5 @@
 export const config = {
   env: 'dev',
-  url: 'http://localhost:8600'
+  api: 'http://localhost:8600',
+  web: 'http://localhost:3000'
 }

@@ -3,7 +3,7 @@ import { config } from './config/index'
 import { User } from './user'
 
 const Axios = axios.create({
-  baseURL: config.url
+  baseURL: config.api
 })
 
 class Api {

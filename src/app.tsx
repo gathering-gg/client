@@ -23,7 +23,8 @@ export class App extends React.Component<any, AppState> {
       loading: false,
       token: this.store.get('token', ''),
       file: this.store.get('file', ''),
-      timer: this.store.get('timer', 30)
+      timer: this.store.get('timer', 30),
+      user: this.store.get('user')
     }
     this.onLogin = this.onLogin.bind(this)
   }
@@ -34,6 +35,7 @@ export class App extends React.Component<any, AppState> {
     if (token && !user) {
       try {
         const user = await api.me(token)
+        this.store.set('user', user)
         this.setState({ user, loading: false })
       } catch (err) {
         this.setState({ loading: false })
@@ -46,6 +48,7 @@ export class App extends React.Component<any, AppState> {
   public onLogin(token: string, user: User) {
     this.setState({ token, user })
     this.store.set('token', token)
+    this.store.set('user', user)
   }
 
   public renderLoading = () => (

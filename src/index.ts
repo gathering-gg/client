@@ -15,6 +15,7 @@ import {
   IPC_GATHERING_OPEN_LOG_DIR
 } from './constants'
 import { GatheringConfig } from './store'
+import { config } from './config/index'
 
 // Squirrel installer launches the app during installation, but we
 // don't need that, or want the app to show, so stop.
@@ -47,12 +48,24 @@ if (!gotLock) {
 }
 
 const isDevMode = process.execPath.match(/[\\/]electron/)
-
 if (isDevMode) {
   enableLiveReload({ strategy: 'react-hmr' })
 }
 
-// Gathering.gg Configuration file
+// Function for Showing/Hiding main window
+const showHide = (show: boolean = false) => {
+  if (!mainWindow) {
+    return createWindow()
+  }
+  if (mainWindow.isVisible()) {
+    if (!show) {
+      return mainWindow.hide()
+    }
+    mainWindow.show()
+  }
+}
+
+// Gathering.gg Configuration
 const store = new Store<GatheringConfig>()
 
 const createWindow = async () => {
@@ -88,14 +101,48 @@ const createWindow = async () => {
 
 // Setup the tray icon and show/hide of our app
 const createTray = () => {
+  const user = store.get('user')
   const icon = join(__dirname, 'images', 'tray', 'icon.png')
   tray = new Tray(icon)
-  const showHide = () => {
-    if (!mainWindow) {
-      return createWindow()
-    }
-    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
-  }
+
+  // User specific menu, only if they are logged in
+  const site = user
+    ? [
+        { type: 'separator' },
+        {
+          label: 'Profile',
+          click() {
+            open(`${config.web}/${user.username}`)
+          }
+        },
+        {
+          label: 'Decks',
+          click() {
+            open(`${config.web}/${user.username}/decks`)
+          }
+        },
+        {
+          label: 'Matches',
+          click() {
+            open(`${config.web}/${user.username}/matches`)
+          }
+        }
+      ]
+    : []
+
+  // Tray Menu
+  const contextMenu = Menu.buildFromTemplate(
+    [
+      { role: 'quit' },
+      {
+        label: 'Show',
+        click() {
+          showHide(true)
+        }
+      }
+    ].concat(site)
+  )
+  tray.setContextMenu(contextMenu)
 
   tray.on('click', showHide)
   tray.on('right-click', showHide)
