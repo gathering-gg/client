@@ -6,16 +6,17 @@ import installExtension, {
 } from 'electron-devtools-installer'
 import * as log from 'electron-log'
 import * as Store from 'electron-store'
+import { noop } from 'lodash'
 import * as open from 'opn'
 import { dirname, join } from 'path'
 import { cli } from './cli'
+import { config } from './config/index'
 import {
   IPC_GATHERING_CLI_RESTART,
   IPC_GATHERING_CLI_UPLOAD,
   IPC_GATHERING_OPEN_LOG_DIR
 } from './constants'
 import { GatheringConfig } from './store'
-import { config } from './config/index'
 
 // Squirrel installer launches the app during installation, but we
 // don't need that, or want the app to show, so stop.
@@ -52,19 +53,6 @@ if (isDevMode) {
   enableLiveReload({ strategy: 'react-hmr' })
 }
 
-// Function for Showing/Hiding main window
-const showHide = (show: boolean = false) => {
-  if (!mainWindow) {
-    return createWindow()
-  }
-  if (mainWindow.isVisible()) {
-    if (!show) {
-      return mainWindow.hide()
-    }
-    mainWindow.show()
-  }
-}
-
 // Gathering.gg Configuration
 const store = new Store<GatheringConfig>()
 
@@ -97,6 +85,19 @@ const createWindow = async () => {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+}
+
+// Function for Showing/Hiding main window
+const showHide = (show: boolean = false) => {
+  if (!mainWindow) {
+    return createWindow()
+  }
+  if (mainWindow.isVisible()) {
+    if (!show) {
+      return mainWindow.hide()
+    }
+    mainWindow.show()
+  }
 }
 
 // Setup the tray icon and show/hide of our app
@@ -144,7 +145,6 @@ const createTray = () => {
   )
   tray.setContextMenu(contextMenu)
 
-  tray.on('click', showHide)
   tray.on('right-click', showHide)
   tray.on('double-click', showHide)
   if (process.platform === 'darwin') {
@@ -165,6 +165,8 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+app.on('window-all-closed', noop)
 
 // Setup Autolaunch on Login if not dev
 if (!isDevMode) {
