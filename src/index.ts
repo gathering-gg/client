@@ -1,5 +1,5 @@
 import * as AutoLaunch from 'auto-launch'
-import { app, ipcMain, BrowserWindow, Menu, Tray } from 'electron'
+import { app, ipcMain, BrowserWindow, Menu, Notification, Tray } from 'electron'
 import { enableLiveReload } from 'electron-compile'
 import installExtension, {
   REACT_DEVELOPER_TOOLS
@@ -17,6 +17,7 @@ import {
   IPC_GATHERING_OPEN_LOG_DIR
 } from './constants'
 import { GatheringConfig } from './store'
+import { HasUpdate } from './update'
 
 // Squirrel installer launches the app during installation, but we
 // don't need that, or want the app to show, so stop.
@@ -152,11 +153,26 @@ const createTray = () => {
   }
 }
 
+const checkForUpdates = async () => {
+  const hasUpdate = HasUpdate()
+  if (hasUpdate) {
+    const note = new Notification({
+      title: 'Update Available',
+      body: 'Please download the new update'
+    })
+    note.on('click', () => {
+      open('https://github.com/gathering-gg/client/releases')
+    })
+    note.show()
+  }
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
 app.on('ready', createTray)
+app.on('ready', checkForUpdates)
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
