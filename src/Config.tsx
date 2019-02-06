@@ -1,7 +1,16 @@
-import { ipcRenderer } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import * as Store from 'electron-store'
 import * as React from 'react'
-import { Button, Form, FormGroup, FormText, Input, Label } from 'reactstrap'
+import {
+  Button,
+  Col,
+  Form,
+  FormGroup,
+  FormText,
+  Input,
+  Label,
+  Row
+} from 'reactstrap'
 import {
   IPC_GATHERING_CLI_RESTART,
   IPC_GATHERING_CLI_UPLOAD,
@@ -131,6 +140,11 @@ export class Config extends React.Component<ConfigProps> {
             Show Gathering Client Log
           </Button>
         </Form>
+        <Row>
+          <Col className="text-center">
+            <small className="text-muted">v{remote.app.getVersion()}</small>
+          </Col>
+        </Row>
       </div>
     )
   }
