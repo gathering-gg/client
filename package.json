@@ -31,7 +31,7 @@
         {
           "name": "@electron-forge/maker-dmg",
           "config": {
-            "format": "UFLO",
+            "format": "ULFO",
             "icon": "./src/images/icon/icon.icns"
           }
         },
