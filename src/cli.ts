@@ -47,7 +47,7 @@ class CLI {
   }
 
   public start(options: CLIOptions) {
-    log.info('Startng cli with binary at:', this.binary)
+    log.info('Starting cli with binary at:', this.binary)
     const opts = compact(
       map(options, (v: string | boolean | undefined, k: string) => {
         if (v) {
@@ -56,6 +56,7 @@ class CLI {
         return undefined
       })
     )
+    log.info(`cli spawn options: ${opts.join(' ')}`)
     const gathering = spawn(this.binary, opts)
 
     gathering.stdout.on('data', data => {
