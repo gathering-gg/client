@@ -86,6 +86,44 @@ const createWindow = async () => {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  const template = [
+    {
+      label: 'Application',
+      submenu: [
+        {
+          label: 'About Application',
+          selector: 'orderFrontStandardAboutPanel:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Quit',
+          accelerator: 'Command+Q',
+          click: function() {
+            app.quit()
+          }
+        }
+      ]
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
+        { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
+        { type: 'separator' },
+        { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+        { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+        { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
+        {
+          label: 'Select All',
+          accelerator: 'CmdOrCtrl+A',
+          selector: 'selectAll:'
+        }
+      ]
+    }
+  ]
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 }
 
 // Function for Showing/Hiding main window
@@ -201,7 +239,9 @@ const startParsing = async () => {
   const token = store.get('token')
   if (token) {
     log.info('Store had token on startup, start parsing.')
-    cli.start({ token })
+    const file = store.get('file')
+    const timer = store.get('timer')
+    cli.start({ file, timer, token })
   }
 }
 
@@ -216,7 +256,9 @@ ipcMain.on(IPC_GATHERING_CLI_RESTART, () => {
   const token = store.get('token')
   if (token) {
     cli.stop()
-    cli.start({ token })
+    const file = store.get('file')
+    const timer = store.get('timer')
+    cli.start({ file, timer, token })
   }
 })
 
