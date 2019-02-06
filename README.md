@@ -44,5 +44,27 @@ Lint:
 yarn lint
 ```
 
+## Deploying a new Version ##
+```
+$ git pull
+```
+Ensure `package.json` reflects the version you want to release. If not, update it.
+```
+$ make clean
+```
+Go to [parser releases](https://github.com/gathering-gg/parser/releases) and download the latest release for Windows. Unzip it.
+```
+$ cp ~/Downloads/gathering_version_exe resources/windows/gathering.exe
+```
+Finally
+```
+electron-forge make --arch=x64
+```
+
+
 ## Contributing ##
 Please feel free to submit issues and pull requests!
+
+## Other Log Path Locations
+* Linux/Wine: `/home/$(whoami)/Games/magic-the-gathering-arena/drive_c/users/$(whoami)/AppData/LocalLow/Wizards Of The Coast/MTGA/output_log.txt`
+* macOS/Wine `/Applications/MTGArena.app/Contents/Resources/drive_c/users/Wineskin/AppData/LocalLow/Wizards\ Of\ The\ Coast/MTGA/output_log.txt`
