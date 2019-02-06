@@ -29,6 +29,7 @@ prod: $(RESOURCE_DIR)/$(GOOS)/$(BINARY)
 	yarn make
 
 clean:
-	rm $(RESOURCE_DIR)/windows/gathering.exe && \
-	rm $(RESOURCE_DIR)/darwin/gathering && \
-	rm $(RESOURCE_DIR)/linux/gathering
+	-rm -rf out
+	-rm $(RESOURCE_DIR)/windows/gathering.exe
+	-rm $(RESOURCE_DIR)/darwin/gathering
+	-rm $(RESOURCE_DIR)/linux/gathering
