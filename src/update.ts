@@ -13,7 +13,7 @@ export const HasUpdate = async () => {
       url: 'https://api.github.com/repos/gathering-gg/client/releases/latest'
     })
     const { tag_name: current } = res.data
-    return semver.eq(appVersion, current)
+    return !semver.eq(appVersion, current)
   } catch (err) {
     log.error('error checking for update', err)
     return false

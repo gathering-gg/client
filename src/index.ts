@@ -192,11 +192,11 @@ const createTray = () => {
 }
 
 const checkForUpdates = async () => {
-  const hasUpdate = HasUpdate()
+  const hasUpdate = await HasUpdate()
   if (hasUpdate) {
     const note = new Notification({
       title: 'Update Available',
-      body: 'Please download the new update'
+      body: 'Please download the new update.'
     })
     note.on('click', () => {
       open('https://github.com/gathering-gg/client/releases')
