@@ -1,7 +1,7 @@
 {
   "name": "gathering-gg-client-ui",
   "productName": "Gathering",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Client for Gathering.gg which records information about MTG Arena.",
   "main": "src/index.ts",
   "scripts": {
