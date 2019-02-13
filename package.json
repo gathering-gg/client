@@ -12,7 +12,7 @@
     "lint": "tslint --project tsconfig.json --force"
   },
   "keywords": [],
-  "author": "Ethan Mick",
+  "author": "Gathering.gg",
   "license": "MIT",
   "build": {
     "extraFiles": [
