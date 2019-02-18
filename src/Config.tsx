@@ -117,8 +117,12 @@ export class Config extends React.Component<ConfigProps> {
             color="primary"
             className="col-10 offset-1 mt-3"
           >
-            Update Tracker
+            Restart Tracker
           </Button>
+          <small className="text-muted col-10 offset-1 px-1">
+            If the parser has crashed in the background or you changed any
+            settings.
+          </small>
           <Button
             type="button"
             color="info"

@@ -1,5 +1,5 @@
 export const config = {
-  env: 'prod',
-  api: 'https://api.gathering.gg'
-  web: 'https://gathering.gg'
+  env: 'dev',
+  api: 'http://localhost:8600',
+  web: 'http://localhost:3000'
 }
