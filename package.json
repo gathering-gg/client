@@ -86,7 +86,7 @@
     "app-root-dir": "^1.0.2",
     "auto-launch": "^5.0.5",
     "axios": "^0.18.0",
-    "bootstrap": "4.2.1",
+    "bootstrap": "4.3.1",
     "electron-compile": "6.4.4",
     "electron-devtools-installer": "2.2.4",
     "electron-log": "^2.2.17",
